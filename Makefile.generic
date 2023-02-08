@@ -1,0 +1,18 @@
+ROSE_FLAGS=--edg:no_warnings -w -rose:verbose 0 --edg:restrict --rose:autopar:unique_indirect_index --rose:autopar:no_aliasing
+
+rose_${CFILE}.c: ${CFILE}.c
+	autoPar ${ROSE_FLAGS} -c $<
+
+benchmark.rose.exe:rose_${CFILE}.c
+	clang -g -O3 ${LINK_FLAGS} $< -o $@
+
+benchmark.exe:${CFILE}.c
+	clang -g -O3 ${LINK_FLAGS} $< -o $@
+
+check_correctness:benchmark.rose.exe benchmark.exe
+	./benchmark.exe ${TEST_ARGS} > benchmark.out 2>&1
+	./benchmark.rose.exe ${TEST_ARGS} > benchmark.rose.out 2>&1
+	diff benchmark.out benchmark.rose.out
+
+clean:
+	rm -rf *.bc *.out *.ll *.cbe.c *.exe *.o *.log *.time *rose*
