@@ -1,5 +1,6 @@
 ROSE_FLAGS=--edg:no_warnings -w -rose:verbose 0 --edg:restrict --rose:autopar:unique_indirect_index --rose:autopar:no_aliasing
-LINK_FLAGS+=-lm
+LINK_FLAGS+=-lm -fopenmp
+RUN_TIMEOUT?=7200 # 2 hours.
 
 rose_${CFILE}.c: ${CFILE}.c
 	autoPar ${ROSE_FLAGS} -c $<
@@ -15,5 +16,9 @@ check_correctness:benchmark.rose.exe benchmark.exe
 	./benchmark.rose.exe ${TEST_ARGS} > benchmark.rose.out 2>&1
 	diff benchmark.out benchmark.rose.out
 
+check_performance:benchmark.rose.exe benchmark.exe
+	regressions-watchdog $(RUN_TIMEOUT) seq.time ./benchmark.exe $(PERF_ARGS) 
+	regressions-watchdog $(RUN_TIMEOUT) rose.time ./benchmark.rose.exe $(PERF_ARGS) 
+	
 clean:
 	rm -rf *.bc *.out *.ll *.cbe.c *.exe *.o *.log *.time *rose*
