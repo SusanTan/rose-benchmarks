@@ -84,7 +84,6 @@ void kernel_2mm(int ni, int nj, int nk, int nl,
       for (k = 0; k < nj; ++k)
         D[i][j] += tmp[i][k] * C[k][j];
     }
-  }
 }
 
 
@@ -105,16 +104,6 @@ int main(int argc, char** argv)
   double (*C)[nl][nj]; C = (double(*)[nl][nj])malloc((nl) * (nj) * sizeof(double));
   double (*D)[ni][nl]; D = (double(*)[ni][nl])malloc((ni) * (nl) * sizeof(double));
 
-
-  __builtin_assume(ni>0);
-  __builtin_assume(nj>0);
-  __builtin_assume(nk>0);
-  __builtin_assume(nl>0);
-  __builtin_assume(ni<0x7FFFFFFE);
-  __builtin_assume(nj<0x7FFFFFFE);
-  __builtin_assume(nk<0x7FFFFFFE);
-  __builtin_assume(nl<0x7FFFFFFE);
-  __builtin_assume(nj>=nl);
 
   init_array (ni, nj, nk, nl, &alpha, &beta,
       *A,
