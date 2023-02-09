@@ -1,4 +1,5 @@
 ROSE_FLAGS=--edg:no_warnings -w -rose:verbose 0 --edg:restrict --rose:autopar:unique_indirect_index --rose:autopar:no_aliasing
+LINK_FLAGS+=-lm
 
 rose_${CFILE}.c: ${CFILE}.c
 	autoPar ${ROSE_FLAGS} -c $<
